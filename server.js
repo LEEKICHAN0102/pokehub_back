@@ -2,6 +2,8 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
+import gymLeaderRouter from "./gym-leader";
+import championRouter from "./champion";
 
 dotenv.config();
 
@@ -36,7 +38,38 @@ const gymLeaderSchema = new mongoose.Schema({
   information: String,
 });
 
+const championSchema = new mongoose.Schema({
+  name: String,
+  introduction: String,
+  quote: String,
+  gender: String,
+  region: String,
+  gym: String,
+  type: String,
+  image: {
+    inGame: String,
+    full: String,
+    sprite_video: {
+      type: String,
+      default: undefined,
+    },
+  },
+  information: String,
+  bgm: {
+    last_battle: String,
+    theme: {
+      type: String,
+      default: undefined,
+    },
+    gym_leader: {
+      type: String,
+      default: undefined,
+    },
+  }
+});
+
 export const GymLeader = mongoose.model("GymLeader", gymLeaderSchema);
+export const Champion = mongoose.model("Champion", championSchema);
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "DB 에러"));
@@ -44,32 +77,8 @@ db.once("open", function () {
   console.log("DB 연결 성공");
 });
 
-app.get("/gym-leader", async (req, res) => {
-  try {
-    // MongoDB에서 모든 Gym Leader 데이터 조회
-    const gymLeaders = await mongoose.connection.collection("gym-leader").find().limit(0).toArray();
-
-    // 조회된 데이터를 클라이언트에게 응답
-    res.json(gymLeaders);
-  } catch (error) {
-    console.error("에러 발생:", error);
-    res.status(500).send("서버 에러");
-  }
-});
-
-app.get("/gym-leader/detail/:name", async (req, res) => {
-  try {
-    const { name } = req.params;
-
-    const findByGymLeaderName = await mongoose.connection.collection("gym-leader").findOne({ name });
-
-    // 조회된 데이터를 클라이언트에게 응답
-    res.json(findByGymLeaderName);
-  } catch (error) {
-    console.error("에러 발생:", error);
-    res.status(500).send("서버 에러");
-  }
-});
+app.use("/gym-leader", gymLeaderRouter);
+app.use("/champion", championRouter);
 
 // 서버 시작
 app.listen(PORT, () => {
