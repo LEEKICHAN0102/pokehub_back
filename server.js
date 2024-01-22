@@ -8,6 +8,7 @@ import gymLeaderRouter from "./gym-leader";
 import eliteFourRouter from "./elite-four";
 import championRouter from "./champion";
 import userRouter from "./user";
+import eventRouter from "./event";
 
 dotenv.config();
 
@@ -48,6 +49,7 @@ app.use("/gym-leader", gymLeaderRouter);
 app.use("/elite-four", eliteFourRouter);
 app.use("/champion", championRouter);
 app.use("/", userRouter);
+app.use("/event", eventRouter);
 
 // 서버 시작
 app.listen(PORT, () => {
