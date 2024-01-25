@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({
-  origin: "http://localhost:3000", // 또는 프론트엔드 도메인
+  origin: "http://localhost:3000",
   credentials: true,
 }));
 
@@ -29,7 +29,7 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     maxAge: 1000 * 60 * 60 * 24,
-    secure: false, // HTTPS에서만 쿠키 전송
+    secure: false,
   },
   store: MongoStore.create({
     mongoUrl: process.env.DB_URL,

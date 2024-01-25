@@ -80,6 +80,24 @@ const userSchema = new mongoose.Schema({
   password_confirm: String,
 });
 
+const postSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User', // User 모델과 연결
+  },
+  title: {
+    type: String,
+    required: true,
+  },
+  content: {
+    text: {
+      type: String,
+      required: true,
+    },
+    images: [String],
+  },
+});
+
 const commentSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -103,5 +121,6 @@ export const EliteFour = mongoose.model("EliteFour", eliteFourSchema , "elite-fo
 export const Champion = mongoose.model("Champion", championSchema, "champion");
 
 export const User = mongoose.model("User", userSchema, "user");
+export const Post = mongoose.model("Post", postSchema, "post");
 export const Comment = mongoose.model("Comment", commentSchema, "comment");
 export const Reply = mongoose.model("Reply", replySchema, "reply");

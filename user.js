@@ -1,17 +1,22 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import { User } from "./schema";
-import checkAuth from "./middleware";
 
 const router = express.Router();
 
-router.get("/page/1", checkAuth, (req, res) => {
-  try{
+router.get("/page/1", async (req, res) => {
+  try {
     // 세션에 사용자 정보가 있으면 반환
-    const user = req.session.user;
-    res.status(200).json({ user });
-  } catch(error){
+    if (req.session && req.session.user) {
+      const user = await req.session.user;
+      console.log(user);
+      res.status(200).json({ user });
+    } else {
+      res.status(401).json({ message: "로그인되지 않은 상태입니다." });
+    }
+  } catch (error) {
     console.log("로그인 되지 않음:", error);
+    res.status(500).json({ message: "서버 오류" });
   }
 });
 
@@ -51,10 +56,7 @@ router.post("/join", async (req, res) => {
 
     await newUser.save();
 
-    const users = await User.find();
-    console.log("MongoDB:", users);
-
-    res.send("계정 생성 완료!");
+    res.status(200).json({ newUser });
   } catch (error) {
     console.error("계정 생성 중 오류 발생:", error);
     res.status(500).json({ message: '계정 생성 중 오류 발생' });
