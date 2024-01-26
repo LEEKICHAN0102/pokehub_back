@@ -1,6 +1,7 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import { User } from "./schema";
+import { Post } from "./schema";
 
 const router = express.Router();
 
@@ -34,6 +35,26 @@ router.post('/login', async (req, res) => {
     res.status(401).json({ message: '비밀번호가 틀렸습니다.' });
   }
 });
+
+router.post("/board/write", async (req,res) => {
+  try{
+    const {
+      title,
+      content,
+    } =req.body;
+
+    const newPost = new Post({
+      title,
+      content,
+    });
+
+    await newPost.save();
+    res.status(200).json({ newUser });
+  } catch (error) {
+    console.error("글 작성 중 오류 발생:", error);
+    res.status(500).json({ message: '글 작성 중 오류 발생' });
+  }
+})
 
 router.post("/join", async (req, res) => {
   try {

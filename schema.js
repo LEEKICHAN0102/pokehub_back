@@ -101,10 +101,13 @@ const postSchema = new mongoose.Schema({
 const commentSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', // User 모델과 연결
+    ref: "User", // User 모델과 연결
   },
   content: String,
-  postId: String,
+  postId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Post", // Post 모델과 연결
+  },
 });
 
 const replySchema = new mongoose.Schema({
@@ -113,7 +116,10 @@ const replySchema = new mongoose.Schema({
     ref: 'User', // User 모델과 연결
   },
   content: String,
-  commentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Comment', required: true },
+  commentId: { 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Comment",
+  },
 });
 
 export const GymLeader = mongoose.model("GymLeader", gymLeaderSchema , "gym-leader");
