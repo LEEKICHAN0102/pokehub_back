@@ -85,16 +85,22 @@ const postSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User', // User 모델과 연결
   },
+  username: String,
   title: {
     type: String,
     required: true,
   },
   content: {
-    text: {
       type: String,
       required: true,
+  },
+  postingTime: {
+    type: String,
+    default: () => {
+      const now = new Date(new Date().getTime());
+      // "YYYY-MM-DD HH:mm" 형식으로 반환
+      return `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
     },
-    images: [String],
   },
 });
 

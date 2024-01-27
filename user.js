@@ -2,6 +2,7 @@ import express from "express";
 import bcrypt from "bcrypt";
 import { User } from "./schema";
 import { Post } from "./schema";
+import mongoose from "mongoose";
 
 const router = express.Router();
 
@@ -36,25 +37,51 @@ router.post('/login', async (req, res) => {
   }
 });
 
-router.post("/board/write", async (req,res) => {
+router.get("/board" , async(req,res) => {
   try{
-    const {
-      title,
-      content,
-    } =req.body;
+    const posting = await mongoose.connection.collection("post").find().limit(0).toArray();
+    res.json(posting);
+  }catch(error){
+    console.error("글 목록 가져오는 중 오류 발생:", error);
+    res.status(500).json({ message: '글 목록 가져오는 중 오류 발생' });
+  }
+})
 
+// router.get("/board/:postId" , async(req,res) => {
+  
+// })
+
+router.post("/board/write", async (req, res) => {
+  try {
+    const { title, content } = req.body;
+    const userId = req.session.user._id;
+
+    if (!userId) {
+      return res.status(401).json({ message: '로그인이 필요합니다.' });
+    }
+
+    // userId로 User 모델에서 사용자 찾기
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
+    }
+
+    // newPost 생성 시 userId와 username 추가
     const newPost = new Post({
+      userId,
+      username: user.username, // User 모델에서 가져온 username 추가
       title,
       content,
     });
 
     await newPost.save();
-    res.status(200).json({ newUser });
+    res.status(200).json({ newPost });
   } catch (error) {
     console.error("글 작성 중 오류 발생:", error);
     res.status(500).json({ message: '글 작성 중 오류 발생' });
   }
-})
+});
 
 router.post("/join", async (req, res) => {
   try {
