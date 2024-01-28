@@ -2,6 +2,7 @@ import express from "express";
 import bcrypt from "bcrypt";
 import { User } from "./schema";
 import { Post } from "./schema";
+import { Comment } from "./schema";
 import mongoose from "mongoose";
 
 const router = express.Router();
@@ -45,11 +46,50 @@ router.get("/board" , async(req,res) => {
     console.error("글 목록 가져오는 중 오류 발생:", error);
     res.status(500).json({ message: '글 목록 가져오는 중 오류 발생' });
   }
-})
+});
 
-// router.get("/board/:postId" , async(req,res) => {
-  
-// })
+router.get("/board/:postId", async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const findByPostId = await mongoose.connection.collection("post").findOne({ _id: new mongoose.Types.ObjectId(postId) });
+    const findCommentByPostId = await mongoose.connection.collection("comment").find({ postId: new mongoose.Types.ObjectId(postId) }).toArray();
+    res.json({ findByPostId, findCommentByPostId });
+  } catch (error) {
+    console.error("포스팅 및 댓글 가져오는 중 에러 발생:", error);
+    res.status(500).send("서버 에러");
+  }
+});
+
+router.post("/board/:postId", async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { content } = req.body;
+    const userId = req.session.user._id;
+
+    if (!userId) {
+      return res.status(401).json({ message: '로그인이 필요합니다.' });
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
+    }
+
+    const newComment = new Comment({
+      userId,
+      username: user.username, // User 모델에서 가져온 username 추가
+      postId,
+      content,
+    });
+
+    await newComment.save();
+    res.status(200).json({ newComment });
+  } catch (error) {
+    console.error("댓글 포스팅 중 에러 발생:", error);
+    res.status(500).send("서버 에러");
+  }
+});
 
 router.post("/board/write", async (req, res) => {
   try {
