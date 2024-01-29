@@ -1,8 +1,6 @@
 import express from "express";
 import bcrypt from "bcrypt";
-import { User } from "./schema";
-import { Post } from "./schema";
-import { Comment } from "./schema";
+import { Reply, User, Post, Comment } from "./schema";
 import mongoose from "mongoose";
 
 const router = express.Router();
@@ -53,12 +51,15 @@ router.get("/board/:postId", async (req, res) => {
     const { postId } = req.params;
     const findByPostId = await mongoose.connection.collection("post").findOne({ _id: new mongoose.Types.ObjectId(postId) });
     const findCommentByPostId = await mongoose.connection.collection("comment").find({ postId: new mongoose.Types.ObjectId(postId) }).toArray();
-    res.json({ findByPostId, findCommentByPostId });
+    const findReplyByCommentId = await mongoose.connection.collection("reply").find({ postId: new mongoose.Types.ObjectId(postId) }).toArray();
+
+    res.json({ findByPostId, findCommentByPostId, findReplyByCommentId });
   } catch (error) {
-    console.error("포스팅 및 댓글 가져오는 중 에러 발생:", error);
+    console.error("포스팅, 댓글 및 답글 가져오는 중 에러 발생:", error);
     res.status(500).send("서버 에러");
   }
 });
+
 
 router.post("/board/:postId", async (req, res) => {
   try {
@@ -78,7 +79,7 @@ router.post("/board/:postId", async (req, res) => {
 
     const newComment = new Comment({
       userId,
-      username: user.username, // User 모델에서 가져온 username 추가
+      username: user.username,
       postId,
       content,
     });
@@ -87,6 +88,38 @@ router.post("/board/:postId", async (req, res) => {
     res.status(200).json({ newComment });
   } catch (error) {
     console.error("댓글 포스팅 중 에러 발생:", error);
+    res.status(500).send("서버 에러");
+  }
+});
+
+router.post("/board/:postId/:commentId", async (req, res) => {
+  try {
+    const { postId, commentId } = req.params;
+    const { replyContent } = req.body;
+    const userId = req.session.user._id;
+
+    if (!userId) {
+      return res.status(401).json({ message: '로그인이 필요합니다.' });
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
+    }
+
+    const newReply = new Reply({
+      userId,
+      postId: postId,
+      commentId: commentId,
+      username: user.username,
+      replyContent,
+    });
+
+    await newReply.save();
+    res.status(200).json({ newReply });
+  } catch (error) {
+    console.error("답글 포스팅 중 에러 발생:", error);
     res.status(500).send("서버 에러");
   }
 });
