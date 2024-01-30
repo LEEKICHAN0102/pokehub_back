@@ -83,7 +83,7 @@ const userSchema = new mongoose.Schema({
 const postSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', // User 모델과 연결
+    ref: "User", // User 모델과 연결
   },
   username: String,
   title: {
@@ -127,11 +127,11 @@ const commentSchema = new mongoose.Schema({
 const replySchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', // User 모델과 연결
+    ref: "User", // User 모델과 연결
   },
   postId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Post', // User 모델과 연결
+    ref: "Post", // User 모델과 연결
   },
   commentId: { 
     type: mongoose.Schema.Types.ObjectId,
@@ -148,6 +148,17 @@ const replySchema = new mongoose.Schema({
   },
 });
 
+const LikeSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User", // User 모델과 연결
+  },
+  postId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Post", // User 모델과 연결
+  },
+});
+
 export const GymLeader = mongoose.model("GymLeader", gymLeaderSchema , "gym-leader");
 export const EliteFour = mongoose.model("EliteFour", eliteFourSchema , "elite-four");
 export const Champion = mongoose.model("Champion", championSchema, "champion");
@@ -156,3 +167,4 @@ export const User = mongoose.model("User", userSchema, "user");
 export const Post = mongoose.model("Post", postSchema, "post");
 export const Comment = mongoose.model("Comment", commentSchema, "comment");
 export const Reply = mongoose.model("Reply", replySchema, "reply");
+export const Like = mongoose.model("Like", LikeSchema, "like");

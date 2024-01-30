@@ -1,6 +1,6 @@
 import express from "express";
 import bcrypt from "bcrypt";
-import { Reply, User, Post, Comment } from "./schema";
+import { Reply, User, Post, Comment, Like } from "./schema";
 import mongoose from "mongoose";
 
 const router = express.Router();
@@ -10,7 +10,7 @@ router.get("/page/1", async (req, res) => {
     // 세션에 사용자 정보가 있으면 반환
     if (req.session && req.session.user) {
       const user = await req.session.user;
-      console.log(user);
+
       res.status(200).json({ user });
     } else {
       res.status(401).json({ message: "로그인되지 않은 상태입니다." });
@@ -46,12 +46,47 @@ router.get("/board" , async(req,res) => {
   }
 });
 
+router.post("/board/write", async (req, res) => {
+  try {
+    const { title, content } = req.body;
+    const userId = await req.session.user._id;
+
+    if (!userId) {
+      return res.status(401).json({ message: '로그인이 필요합니다.' });
+    }
+
+    // userId로 User 모델에서 사용자 찾기
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
+    }
+
+    // newPost 생성 시 userId와 username 추가
+    const newPost = new Post({
+      userId,
+      username: user.username, // User 모델에서 가져온 username 추가
+      title,
+      content,
+    });
+
+    await newPost.save();
+    res.status(200).json({ newPost });
+  } catch (error) {
+    console.error("글 작성 중 오류 발생:", error);
+    res.status(500).json({ message: '글 작성 중 오류 발생' });
+  }
+});
+
 router.get("/board/:postId", async (req, res) => {
   try {
     const { postId } = req.params;
-    const findByPostId = await mongoose.connection.collection("post").findOne({ _id: new mongoose.Types.ObjectId(postId) });
-    const findCommentByPostId = await mongoose.connection.collection("comment").find({ postId: new mongoose.Types.ObjectId(postId) }).toArray();
-    const findReplyByCommentId = await mongoose.connection.collection("reply").find({ postId: new mongoose.Types.ObjectId(postId) }).toArray();
+
+    const [findByPostId, findCommentByPostId, findReplyByCommentId] = await Promise.all([
+      mongoose.connection.collection("post").findOne({ _id: new mongoose.Types.ObjectId(postId) }),
+      mongoose.connection.collection("comment").find({ postId: new mongoose.Types.ObjectId(postId) }).toArray(),
+      mongoose.connection.collection("reply").find({ postId: new mongoose.Types.ObjectId(postId) }).toArray(),
+    ]);
 
     res.json({ findByPostId, findCommentByPostId, findReplyByCommentId });
   } catch (error) {
@@ -65,7 +100,7 @@ router.post("/board/:postId", async (req, res) => {
   try {
     const { postId } = req.params;
     const { content } = req.body;
-    const userId = req.session.user._id;
+    const userId = await req.session.user._id;
 
     if (!userId) {
       return res.status(401).json({ message: '로그인이 필요합니다.' });
@@ -92,13 +127,47 @@ router.post("/board/:postId", async (req, res) => {
   }
 });
 
+router.post("/board/like/:postId", async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const userId = await req.session.user._id;
+
+    if (!userId) {
+      console.error("로그인이 필요합니다.");
+      return res.status(401).json({ message: '로그인이 필요합니다.' });
+    }
+
+    const existingLike = await Like.findOne({ userId, postId });
+
+    if (existingLike) {
+      await Like.findByIdAndDelete(existingLike._id);
+      return res.status(200).json({ message: '좋아요 취소' });
+    }
+
+    const newLike = new Like({
+      userId,
+      postId,
+    });
+
+    await newLike.save();
+    
+    console.log("좋아요가 성공적으로 저장되었습니다.");
+
+    res.status(200).send(`좋아요 누른 userId: ${userId}, 좋아요 누른 postId: ${postId}`);
+  } catch (error) {
+    console.error("좋아요 중 에러 발생:", error);
+    res.status(500).json({ message: '서버 에러', error: error.message });
+  }
+});
+
 router.post("/board/:postId/:commentId", async (req, res) => {
   try {
     const { postId, commentId } = req.params;
     const { replyContent } = req.body;
-    const userId = req.session.user._id;
+    const userId = await req.session.user._id;
 
     if (!userId) {
+      console.error("로그인이 필요합니다.");
       return res.status(401).json({ message: '로그인이 필요합니다.' });
     }
 
@@ -120,39 +189,7 @@ router.post("/board/:postId/:commentId", async (req, res) => {
     res.status(200).json({ newReply });
   } catch (error) {
     console.error("답글 포스팅 중 에러 발생:", error);
-    res.status(500).send("서버 에러");
-  }
-});
-
-router.post("/board/write", async (req, res) => {
-  try {
-    const { title, content } = req.body;
-    const userId = req.session.user._id;
-
-    if (!userId) {
-      return res.status(401).json({ message: '로그인이 필요합니다.' });
-    }
-
-    // userId로 User 모델에서 사용자 찾기
-    const user = await User.findById(userId);
-
-    if (!user) {
-      return res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
-    }
-
-    // newPost 생성 시 userId와 username 추가
-    const newPost = new Post({
-      userId,
-      username: user.username, // User 모델에서 가져온 username 추가
-      title,
-      content,
-    });
-
-    await newPost.save();
-    res.status(200).json({ newPost });
-  } catch (error) {
-    console.error("글 작성 중 오류 발생:", error);
-    res.status(500).json({ message: '글 작성 중 오류 발생' });
+    res.status(500).json({ message: '서버 에러', error: error.message });
   }
 });
 
