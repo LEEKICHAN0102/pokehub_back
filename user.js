@@ -1,6 +1,6 @@
 import express from "express";
 import bcrypt from "bcrypt";
-import { Reply, User, Post, Comment, Like } from "./schema";
+import { Reply, User, Post, Comment } from "./schema";
 import mongoose from "mongoose";
 
 const router = express.Router();
@@ -130,27 +130,34 @@ router.post("/board/:postId", async (req, res) => {
 router.post("/board/like/:postId", async (req, res) => {
   try {
     const { postId } = req.params;
-    const userId = await req.session.user._id;
+    const userId = req.session.user._id;
 
     if (!userId) {
       console.error("로그인이 필요합니다.");
       return res.status(401).json({ message: '로그인이 필요합니다.' });
     }
 
-    const existingLike = await Like.findOne({ userId, postId });
+    const post = await Post.findById(postId);
 
-    if (existingLike) {
-      await Like.findByIdAndDelete(existingLike._id);
+    if (!post) {
+      return res.status(404).json({ message: '게시물을 찾을 수 없습니다.' });
+    }
+
+    const existingLikeIndex = post.likes.indexOf(userId);
+
+    if (existingLikeIndex !== -1) {
+      // 이미 좋아요를 누른 경우, 좋아요 취소
+      post.likes.splice(existingLikeIndex, 1);
+      post.likeCount -= 1;
+      await post.save();
       return res.status(200).json({ message: '좋아요 취소' });
     }
 
-    const newLike = new Like({
-      userId,
-      postId,
-    });
+    // 좋아요 추가
+    post.likes.push(userId);
+    post.likeCount += 1;
+    await post.save();
 
-    await newLike.save();
-    
     console.log("좋아요가 성공적으로 저장되었습니다.");
 
     res.status(200).send(`좋아요 누른 userId: ${userId}, 좋아요 누른 postId: ${postId}`);
