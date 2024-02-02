@@ -36,6 +36,15 @@ router.post('/login', async (req, res) => {
   }
 });
 
+router.get("profile/:userId", async(req,res) => {
+  try{
+    const { userId } = req.params;
+  }catch(error){
+    console.error("프로필 가져오는 중 오류 발생:", error);
+    res.status(500).json({ message: '프로필 가져오는 중 오류 발생' });
+  }
+});
+
 router.get("/board" , async(req,res) => {
   try{
     const posting = await mongoose.connection.collection("post").find().limit(0).toArray();
