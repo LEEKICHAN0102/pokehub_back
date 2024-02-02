@@ -36,15 +36,6 @@ router.post('/login', async (req, res) => {
   }
 });
 
-router.get("profile/:userId", async(req,res) => {
-  try{
-    const { userId } = req.params;
-  }catch(error){
-    console.error("프로필 가져오는 중 오류 발생:", error);
-    res.status(500).json({ message: '프로필 가져오는 중 오류 발생' });
-  }
-});
-
 router.get("/board" , async(req,res) => {
   try{
     const posting = await mongoose.connection.collection("post").find().limit(0).toArray();
@@ -249,5 +240,22 @@ router.post("/logout", (req, res) => {
   });
 });
 
+router.get("/profile/:userId", async(req,res) => {
+  try {
+    if (req.session && req.session.user) {
+      const user = await req.session.user;
+      const { userId } = req.params;
+      const userPosting = await mongoose.connection.collection("post").find({ userId: new mongoose.Types.ObjectId(userId) }).toArray();
+      const userLiked = await mongoose.connection.collection("post").find({ likes: new mongoose.Types.ObjectId(userId) }).toArray();
+
+      res.status(200).json({ user, userPosting, userLiked });
+    } else {
+      res.status(401).json({ message: "유저 프로필 정보를 가져오지 못함." });
+    }
+  } catch (error) {
+    console.log("유저 프로필 정보를 가져오는 중 에러 발생.:", error);
+    res.status(500).json({ message: "서버 오류" });
+  }
+});
 
 export default router;
