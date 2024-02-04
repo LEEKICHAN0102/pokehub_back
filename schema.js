@@ -65,6 +65,14 @@ const championSchema = new mongoose.Schema({
       type: String,
       default: undefined,
     },
+    battle: {
+      type: String,
+      default: undefined,
+    },
+    chance_of_victory: {
+      type: String,
+      default: undefined,
+    },
     gym_leader: {
       type: String,
       default: undefined,
