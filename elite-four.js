@@ -6,12 +6,41 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   try {
     const eliteFour = await mongoose.connection.collection("elite-four").find().toArray();
-    res.json(eliteFour);
+
+    // 원하는 문서의 _id
+    const documentId = "65a60183b3a30685a7670ef2";
+
+    // 원하는 문서를 찾습니다.
+    const targetDocumentIndex = eliteFour.findIndex(doc => doc._id.toString() === documentId);
+
+    // 찾은 문서가 없으면 오류를 반환합니다.
+    if (targetDocumentIndex === -1) {
+      return res.status(404).json({ message: "문서를 찾을 수 없습니다." });
+    }
+
+    // 12번째 위치에 있는 문서의 인덱스
+    const targetIndex = 11;
+
+    // 옮기려는 문서
+    const targetDocument = eliteFour.splice(targetDocumentIndex, 1)[0];
+
+    // 12번째 위치에 문서를 삽입합니다.
+    eliteFour.splice(targetIndex, 0, targetDocument);
+
+    // 새로운 순서로 업데이트된 문서들을 MongoDB에 반영합니다.
+    for (let i = 0; i < eliteFour.length; i++) {
+      await mongoose.connection.collection("elite-four").updateOne(
+        { _id: eliteFour[i]._id },
+        { $set: { order: i + 1 } }
+      );
+    }
+    res.json( eliteFour );
   } catch (error) {
     console.error("에러 발생:", error);
     res.status(500).send("서버 에러");
   }
 });
+
 
 router.get("/detail/:name", async (req, res) => {
   try {

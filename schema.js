@@ -9,12 +9,12 @@ const gymLeaderSchema = new mongoose.Schema({
   gym: String,
   badge: {
     name: String,
-    image: String,
   },
   type: String,
   image: {
     inGame: String,
     full: String,
+    badge: String,
   },
   information: String,
 });
@@ -32,13 +32,6 @@ const eliteFourSchema = new mongoose.Schema({
     full: String,
   },
   information: String,
-  bgm: {
-    battle: String,
-    theme: {
-      type: String,
-      default: undefined,
-    },
-  },
   ace_pokemon: Array,
 });
 

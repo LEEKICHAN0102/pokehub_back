@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 
 const router = express.Router();
 
-router.get("/page/1", async (req, res) => {
+router.get("/pokemon/1", async (req, res) => {
   try {
     // 세션에 사용자 정보가 있으면 반환
     if (req.session && req.session.user) {
