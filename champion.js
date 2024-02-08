@@ -13,11 +13,11 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/detail/:name", async (req, res) => {
+router.get("/detail/:order", async (req, res) => {
   try {
-    const { name } = req.params;
-    const findByChampionName = await mongoose.connection.collection("champion").findOne({ name });
-    res.json(findByChampionName);
+    const { order } = req.params;
+    const findByChampionOrder = await mongoose.connection.collection("champion").findOne({ order: Number(order) });
+    res.json(findByChampionOrder);
   } catch (error) {
     console.error("에러 발생:", error);
     res.status(500).send("서버 에러");

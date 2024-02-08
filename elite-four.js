@@ -26,14 +26,6 @@ router.get("/", async (req, res) => {
 
     // 12번째 위치에 문서를 삽입합니다.
     eliteFour.splice(targetIndex, 0, targetDocument);
-
-    // 새로운 순서로 업데이트된 문서들을 MongoDB에 반영합니다.
-    for (let i = 0; i < eliteFour.length; i++) {
-      await mongoose.connection.collection("elite-four").updateOne(
-        { _id: eliteFour[i]._id },
-        { $set: { order: i + 1 } }
-      );
-    }
     res.json( eliteFour );
   } catch (error) {
     console.error("에러 발생:", error);
@@ -42,10 +34,10 @@ router.get("/", async (req, res) => {
 });
 
 
-router.get("/detail/:name", async (req, res) => {
+router.get("/detail/:order", async (req, res) => {
   try {
-    const { name } = req.params;
-    const findByEliteName = await mongoose.connection.collection("elite-four").findOne({ name });
+    const { order } = req.params;
+    const findByEliteName = await mongoose.connection.collection("elite-four").findOne({ order: Number(order) });
     res.json(findByEliteName);
   } catch (error) {
     console.error("에러 발생:", error);
