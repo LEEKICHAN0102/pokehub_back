@@ -17,6 +17,7 @@ const gymLeaderSchema = new mongoose.Schema({
     badge: String,
   },
   information: String,
+  ace_pokemon: String,
 });
 
 const eliteFourSchema = new mongoose.Schema({
@@ -32,7 +33,7 @@ const eliteFourSchema = new mongoose.Schema({
     full: String,
   },
   information: String,
-  ace_pokemon: Array,
+  ace_pokemon: String,
 });
 
 const championSchema = new mongoose.Schema({
@@ -71,7 +72,7 @@ const championSchema = new mongoose.Schema({
       default: undefined,
     },
   },
-  ace_pokemon: Array,
+  ace_pokemon: String,
 });
 
 const userSchema = new mongoose.Schema({ 
