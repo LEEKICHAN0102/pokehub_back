@@ -36,11 +36,17 @@ router.post('/login', async (req, res) => {
   }
 });
 
-router.get("/board" , async(req,res) => {
-  try{
-    const posting = await mongoose.connection.collection("post").find().limit(0).toArray();
-    res.json(posting);
-  }catch(error){
+router.get("/board/:page", async (req, res) => {
+  try {
+    const { page } = req.params;
+    const pageSize = 20;
+    const skip = (page - 1) * pageSize;
+
+    const totalCount = await mongoose.connection.collection("post").countDocuments();
+    const posting = await mongoose.connection.collection("post").find().sort({ createdAt: -1 }).skip(skip).limit(pageSize).toArray();
+
+    res.json({ posting, totalCount });
+  } catch (error) {
     console.error("글 목록 가져오는 중 오류 발생:", error);
     res.status(500).json({ message: '글 목록 가져오는 중 오류 발생' });
   }
@@ -78,7 +84,7 @@ router.post("/board/write", async (req, res) => {
   }
 });
 
-router.get("/board/:postId", async (req, res) => {
+router.get("/board/detail/:postId", async (req, res) => {
   try {
     const { postId } = req.params;
 
@@ -96,7 +102,7 @@ router.get("/board/:postId", async (req, res) => {
 });
 
 
-router.post("/board/:postId", async (req, res) => {
+router.post("/board/detail/:postId", async (req, res) => {
   try {
     const { postId } = req.params;
     const { content } = req.body;
@@ -127,7 +133,7 @@ router.post("/board/:postId", async (req, res) => {
   }
 });
 
-router.post("/board/like/:postId", async (req, res) => {
+router.post("/board/detail/like/:postId", async (req, res) => {
   try {
     const { postId } = req.params;
     const userId = req.session.user._id;
@@ -167,7 +173,7 @@ router.post("/board/like/:postId", async (req, res) => {
   }
 });
 
-router.post("/board/:postId/:commentId", async (req, res) => {
+router.post("/board/detail/:postId/:commentId", async (req, res) => {
   try {
     const { postId, commentId } = req.params;
     const { replyContent } = req.body;

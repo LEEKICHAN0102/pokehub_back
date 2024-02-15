@@ -104,6 +104,10 @@ const postSchema = new mongoose.Schema({
         return `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
       },
     },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // 사용자 ID 배열
     likeCount: { type: Number, default: 0 },
   },{
