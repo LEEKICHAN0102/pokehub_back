@@ -29,10 +29,8 @@ router.post('/login', async (req, res) => {
   if (user && (await bcrypt.compare(password, user.password))) {
     req.session.user = user; // 세션에 사용자 정보 저장
     res.status(200).json({ message: '로그인 성공', user });
-  } else if (!user) {
-    res.status(401).json({ message: '존재하지 않는 이메일입니다.' });
-  } else if (!(await bcrypt.compare(password, user.password))) {
-    res.status(401).json({ message: '비밀번호가 틀렸습니다.' });
+  } else if (!user || !(await bcrypt.compare(password, user.password))) {
+    res.status(400).send('존재하지 않는 이메일 주소이거나 비밀번호가 일치하지 않습니다..');
   }
 });
 
@@ -214,6 +212,15 @@ router.post("/join", async (req, res) => {
       password,
       password_confirm,
     } = req.body;
+
+    const existUserEmail = await User.findOne({ email });
+    const existUserName = await User.findOne({ username });
+
+    if (existUserName) {
+      return res.status(400).send("동일한 유저 닉네임이 이미 존재합니다.");
+    } else if(existUserEmail){
+      return res.status(401).send("동일한 주소의 이메일이 이미 존재합니다.");
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const hashedPassword_confirm = await bcrypt.hash(password_confirm, 10);
