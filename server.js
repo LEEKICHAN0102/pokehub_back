@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: "https://pokehub-encyclopedia.vercel.app",
   credentials: true,
 }));
 
@@ -53,5 +53,5 @@ app.use("/event", eventRouter);
 
 // 서버 시작
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on ${PORT}`);
 });
