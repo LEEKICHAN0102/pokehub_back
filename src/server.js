@@ -4,15 +4,15 @@ import dotenv from "dotenv";
 import cors from "cors";
 import session from "express-session";
 import MongoStore from "connect-mongo";
-import gymLeaderRouter from "./gym-leader";
-import eliteFourRouter from "./elite-four";
-import championRouter from "./champion";
-import userRouter from "./user";
-import eventRouter from "./event";
+import gymLeaderRouter from "./character/gym-leader.js";
+import eliteFourRouter from "./character/elite-four.js";
+import championRouter from "./character/champion.js";
+import userRouter from "./user/user.js";
+import eventRouter from "./event/event.js";
 
 dotenv.config();
 
-const PORT = process.env.PORT;
+const PORT = process.env.SERVER_PORT;
 const app = express();
 
 app.use(express.json());
