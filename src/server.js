@@ -32,7 +32,7 @@ app.use(session({
     secure: true,
     sameSite: "none",
     path: "/",
-    domain: "https://pokehub-encyclopedia.site",
+    domain: "pokehub-encyclopedia.site",
   },
   store: MongoStore.create({
     mongoUrl: process.env.DB_URL,
