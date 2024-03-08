@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({
-  origin: true,
+  origin: "https://pokehub-encyclopedia.vercel.app/",
   credentials: true,
 }));
 
