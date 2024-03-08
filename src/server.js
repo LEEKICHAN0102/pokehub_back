@@ -31,6 +31,7 @@ app.use(session({
     maxAge: 1000 * 60 * 60 * 24,
     secure: true,
     sameSite: "none",
+    domain: ".pokehub-encyclopedia.site",
   },
   store: MongoStore.create({
     mongoUrl: process.env.DB_URL,
