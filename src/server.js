@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({
-  origin: "https://pokehub-encyclopedia.vercel.app/",
+  origin: "https://pokehub-encyclopedia.vercel.app",
   credentials: true,
 }));
 
@@ -29,7 +29,7 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     maxAge: 1000 * 60 * 60 * 24,
-    domain: ".site",
+    domain: ".pokehub-encyclopedia.site",
   },
   store: MongoStore.create({
     mongoUrl: process.env.DB_URL,
