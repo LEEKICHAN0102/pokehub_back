@@ -99,7 +99,7 @@ const postSchema = new mongoose.Schema({
     postingTime: {
       type: String,
       default: () => {
-        const now = new Date(new Date().getTime());
+        const now = new Date(new Date().getTime() + (9 * 60 * 60 * 1000));
         // "YYYY-MM-DD HH:mm" 형식으로 반환
         return `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
       },
@@ -128,7 +128,7 @@ const commentSchema = new mongoose.Schema({
   postingTime: {
     type: String,
     default: () => {
-      const now = new Date(new Date().getTime());
+      const now = new Date(new Date().getTime() + (9 * 60 * 60 * 1000));
       return `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
     },
   },
@@ -152,7 +152,7 @@ const replySchema = new mongoose.Schema({
   postingTime: {
     type: String,
     default: () => {
-      const now = new Date(new Date().getTime());
+      const now = new Date(new Date().getTime() + (9 * 60 * 60 * 1000));
       return `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
     },
   },
