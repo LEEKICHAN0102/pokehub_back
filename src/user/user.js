@@ -43,7 +43,7 @@ router.get("/board/:page", async (req, res) => {
     const totalCount = await mongoose.connection.collection("post").countDocuments();
     const posting = await mongoose.connection.collection("post").find().sort({ createdAt: -1 }).skip(skip).limit(pageSize).toArray();
 
-    res.json({ posting, totalCount });
+    res.status(200).json({ posting, totalCount });
   } catch (error) {
     console.error("글 목록 가져오는 중 오류 발생:", error);
     res.status(500).json({ message: '글 목록 가져오는 중 오류 발생' });
@@ -92,12 +92,47 @@ router.get("/board/detail/:postId", async (req, res) => {
       mongoose.connection.collection("reply").find({ postId: new mongoose.Types.ObjectId(postId) }).toArray(),
     ]);
 
-    res.json({ findByPostId, findCommentByPostId, findReplyByCommentId });
+    res.status(200).json({ findByPostId, findCommentByPostId, findReplyByCommentId });
   } catch (error) {
     console.error("포스팅, 댓글 및 답글 가져오는 중 에러 발생:", error);
     res.status(500).send("서버 에러");
   }
 });
+
+router.put("/board/edit/:postId", async(req,res) => {
+  try {
+    const { postId } = req.params;
+    const { editTitle, editContent } = req.body;
+
+    const updatedPost = await mongoose.connection.collection("post").findOneAndUpdate(
+      { _id: new mongoose.Types.ObjectId(postId) },
+      { $set: { title: editTitle , content: editContent }},
+      { new: true }
+    );
+    
+    res.status(200).json({ updatedPost });
+  } catch (error) {
+    console.error("포스팅 수정 중 에러 발생:", error);
+    res.status(500).send("서버 에러");
+  }
+})
+
+router.delete("/board/detail/:postId/delete", async(req,res) => {
+  try {
+    const { postId } = req.params;
+
+    const [deleteByPostId, deleteComments, deleteReplies] = await Promise.all([
+      mongoose.connection.collection("post").findOneAndDelete({ _id: new mongoose.Types.ObjectId(postId) }),
+      mongoose.connection.collection("comment").deleteMany({ postId: new mongoose.Types.ObjectId(postId) }),
+      mongoose.connection.collection("reply").deleteMany({ postId: new mongoose.Types.ObjectId(postId) }),
+    ]);
+
+    res.status(200).json({ deleteByPostId, deleteComments, deleteReplies });
+  } catch (error) {
+    console.error("포스팅, 댓글 및 답글 삭제 중 에러 발생:", error);
+    res.status(500).send("서버 에러");
+  }
+})
 
 
 router.post("/board/detail/:postId", async (req, res) => {
@@ -130,6 +165,41 @@ router.post("/board/detail/:postId", async (req, res) => {
     res.status(500).send("서버 에러");
   }
 });
+
+router.delete("/board/detail/:postId/:commentId/deleteComment", async(req,res) => {
+  try{
+    const { commentId } = req.params;
+    
+    const [deleteComment, deleteCommentReplies] = await Promise.all([
+      mongoose.connection.collection("comment").deleteOne({ _id: new mongoose.Types.ObjectId(commentId) }),
+      mongoose.connection.collection("reply").deleteMany({ commentId: new mongoose.Types.ObjectId(commentId) }),
+    ]);
+
+    res.status(200).json({ deleteComment, deleteCommentReplies });
+  }catch(error){
+    console.error("댓글 & (해당 하는 답글) 삭제 중 에러 발생:", error);
+    res.status(500).send("서버 에러");
+  }
+})
+
+router.put("/board/detail/:postId/:commentId/updateComment", async (req, res) => {
+  try {
+    const { commentId } = req.params;
+    const { editContent } = req.body;
+
+    const updatedComment = await mongoose.connection.collection("comment").findOneAndUpdate(
+      { _id: new mongoose.Types.ObjectId(commentId) },
+      { $set: { content: editContent } },
+      { new: true }
+    );
+    
+    res.status(200).json({ updatedComment });
+  } catch (error) {
+    console.error("댓글 수정 중 에러 발생:", error);
+    res.status(500).send("서버 에러");
+  }
+});
+
 
 router.post("/board/detail/like/:postId", async (req, res) => {
   try {
@@ -201,6 +271,39 @@ router.post("/board/detail/:postId/:commentId", async (req, res) => {
   } catch (error) {
     console.error("답글 포스팅 중 에러 발생:", error);
     res.status(500).json({ message: '서버 에러', error: error.message });
+  }
+});
+
+router.delete("/board/detail/:postId/:replyId/deleteReply", async(req,res) => {
+  try{
+    const { replyId } = req.params;
+    
+    const [deleteReply] = await Promise.all([
+      mongoose.connection.collection("reply").deleteOne({ _id: new mongoose.Types.ObjectId(replyId) }),
+    ]);
+
+    res.status(200).json({ deleteReply });
+  }catch(error){
+    console.error("답글 삭제 중 에러 발생:", error);
+    res.status(500).send("서버 에러");
+  }
+})
+
+router.put("/board/detail/:postId/:replyId/updateReply", async (req, res) => {
+  try {
+    const { replyId } = req.params;
+    const { editReply } = req.body;
+
+    const updatedReply = await mongoose.connection.collection("reply").findOneAndUpdate(
+      { _id: new mongoose.Types.ObjectId(replyId) },
+      { $set: { replyContent: editReply } },
+      { new: true }
+    );
+    
+    res.status(200).json({ updatedReply });
+  } catch (error) {
+    console.error("답글 수정 중 에러 발생:", error);
+    res.status(500).send("서버 에러");
   }
 });
 
