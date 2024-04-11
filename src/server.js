@@ -8,6 +8,7 @@ import gymLeaderRouter from "./character/gym-leader.js";
 import eliteFourRouter from "./character/elite-four.js";
 import championRouter from "./character/champion.js";
 import userRouter from "./user/user.js";
+import postRouter from "./post/postLogic.js";
 import eventRouter from "./event/event.js";
 
 dotenv.config();
@@ -53,6 +54,7 @@ app.use("/gym-leader", gymLeaderRouter);
 app.use("/elite-four", eliteFourRouter);
 app.use("/champion", championRouter);
 app.use("/", userRouter);
+app.use("/board", postRouter);
 app.use("/event", eventRouter);
 
 // 서버 시작
