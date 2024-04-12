@@ -1,6 +1,6 @@
 import express from "express";
-import { Reply, User, Post, Comment } from "../schema/schema";
 import mongoose from "mongoose";
+import { User, Post, Comment, Reply } from "../schema/schema.js";
 
 const router = express.Router();
 
