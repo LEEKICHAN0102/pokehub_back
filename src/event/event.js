@@ -16,9 +16,6 @@ router.get("/", async (req, res) => {
 
     await page.waitForSelector("#newslist li");
 
-    // "더보기" 버튼 클릭
-    await page.click(".btn-details");
-
     await page.waitForTimeout(2000);
 
     const eventData = [];

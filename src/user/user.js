@@ -5,6 +5,33 @@ import mongoose from "mongoose";
 
 const router = express.Router();
 
+router.get("/", async (req,res) => {
+  const apiRequestFormat = {
+    "BASE_URL": "https://pokehub-encyclopedia.site",
+    "1. 인물 정보": {
+        "1.1 포켓몬 관장 정보(All)": `{BASE_URL}/gym-leader`,
+        "1.2 포켓몬 관장 정보(Detail)": `{BASE_URL}/gym-leader/detail/{gymLeader.order}`,
+        "1.3 포켓몬 사천왕 정보(All)": `{BASE_URL}/elite-four`,
+        "1.4 포켓몬 사천왕 정보(Detail)": `{BASE_URL}/elite-four/detail/{eliteFour.order}`,
+        "1.5 포켓몬 챔피언 정보(All)": `{BASE_URL}/champion`,
+        "1.6 포켓몬 챔피언 정보(Detail)": `{BASE_URL}/champion/detail/{champion.order}`
+    },
+    "2. 이벤트": {
+        "2.1 이벤트 카드(All)": "Link to https://pokemonkorea.co.kr/news",
+        "2.2": `{BASE_URL}/event`
+    },
+    "3. 게시판": {
+        "3.1 게시글(페이지)": `{BASE_URL}/board/{paginationNumber}`,
+        "3.2": `{BASE_URL}/board/detail/(posting._id)`
+    },
+    "4. 프로필": {
+        "4.1 프로필": `{BASE_URL}/profile/{userId}`
+    }
+  };
+  // send JSON  API Architecture 
+  res.json(apiRequestFormat);
+})
+
 router.get("/pokemon/1", async (req, res) => {
   try {
     // 세션에 사용자 정보가 있으면 반환
