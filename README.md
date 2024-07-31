@@ -32,13 +32,13 @@
 
 > npm install
 
-3. Start the development Server
+3. Start the development Server(Environmental variable decryption is required)
 
-> npm start
+> sh decryptEnv.sh
 
 4. Open the Project in your browser
 
-> https://localhost:8080
+> http://localhost:8080
 
 - 더 많은 컨텐츠 이용을 위해 [PokéHub | FE](https://github.com/LEEKICHAN0102/pokehub_front) 설치
 
