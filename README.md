@@ -67,7 +67,9 @@ pokehub_be/
 │   │   ├── user.js
 │   └── server.js
 ├── .babelrc
+├── .env.enc
 ├── .gitignore
+├── decryptEnv.sh
 ├── package-lock.json
 ├── package.json
 └── README.md
@@ -75,7 +77,8 @@ pokehub_be/
 
 ## API
 ```
-BASE_URL = https://pokehub-encyclopedia.site
+BEFORE_BASE_URL = https://pokehub-encyclopedia.site
+BASE_URL = http://localhost:8080/
 
 1. 인물 정보
   > 1.1 포켓몬 관장 정보(All)
