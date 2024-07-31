@@ -7,18 +7,19 @@ const router = express.Router();
 
 router.get("/", async (req,res) => {
   const apiRequestFormat = {
-    "BASE_URL": "https://pokehub-encyclopedia.site",
+    "BEFORE_BASE_URL": "https://pokehub-encyclopedia.site", "중단 사유": "▲ aws 프리티어 기간 종료에 따라 비용 부담 문제로 인한 배포 중단",
+    "BASE_URL": "http://localhost:8080",
     "1. 인물 정보": {
-        "1.1 포켓몬 관장 정보(All)": `{BASE_URL}/gym-leader`,
+        "1.1 포켓몬 관장 정보(All)": "http://localhost:8080/gym-leader",
         "1.2 포켓몬 관장 정보(Detail)": `{BASE_URL}/gym-leader/detail/{gymLeader.order}`,
-        "1.3 포켓몬 사천왕 정보(All)": `{BASE_URL}/elite-four`,
+        "1.3 포켓몬 사천왕 정보(All)": "http://localhost:8080/elite-four",
         "1.4 포켓몬 사천왕 정보(Detail)": `{BASE_URL}/elite-four/detail/{eliteFour.order}`,
-        "1.5 포켓몬 챔피언 정보(All)": `{BASE_URL}/champion`,
-        "1.6 포켓몬 챔피언 정보(Detail)": `{BASE_URL}/champion/detail/{champion.order}`
+        "1.5 포켓몬 챔피언 정보(All)": "http://localhost:8080/champion",
+        "1.6 포켓몬 챔피언 정보(Detail)": `{BASE_URL}/champion/detail/{champion.order}`,
     },
     "2. 이벤트": {
         "2.1 이벤트 카드(All)": "Link to https://pokemonkorea.co.kr/news",
-        "2.2": `{BASE_URL}/event`
+        "2.2": "http://localhost:8080/event"
     },
     "3. 게시판": {
         "3.1 게시글(페이지)": `{BASE_URL}/board/{paginationNumber}`,
