@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: "https://pokehub-encyclopedia.vercel.app",
   credentials: true,
 }));
 
@@ -28,9 +28,12 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
+  proxy: true,
   cookie: {
     maxAge: 1000 * 60 * 60 * 24,
-    secure: false,
+    secure: true,
+    sameSite: "none",
+    domain: ".pokehub-encyclopedia.site",
   },
   store: MongoStore.create({
     mongoUrl: process.env.DB_URL,
