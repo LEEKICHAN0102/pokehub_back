@@ -1,5 +1,5 @@
 import express from "express";
-import { GymLeader } from "./schema";
+import { GymLeader } from "./schema.js";
 
 const router = express.Router();
 
