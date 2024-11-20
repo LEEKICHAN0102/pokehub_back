@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    const eliteFour = await mongoose.connection.collection("elite-four").find().toArray();
+    const eliteFour = await mongoose.connection.collection("elite-four").find().fetch();
 
     // 원하는 문서의 _id
     const documentId = "65a60183b3a30685a7670ef2";
