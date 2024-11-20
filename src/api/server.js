@@ -4,16 +4,15 @@ import dotenv from "dotenv";
 import cors from "cors";
 import session from "express-session";
 import MongoStore from "connect-mongo";
-import gymLeaderRouter from "./character/gym-leader.js";
-import eliteFourRouter from "./character/elite-four.js";
-import championRouter from "./character/champion.js";
-import userRouter from "./user/user.js";
-import eventRouter from "./event/event.js";
-import postingRouter from "./posting/posting.js";
+import gymLeaderRouter from "../character/gym-leader.js";
+import eliteFourRouter from "../character/elite-four.js";
+import championRouter from "../character/champion.js";
+import userRouter from "../user/user.js";
+import eventRouter from "../event/event.js";
+import postingRouter from "../posting/posting.js";
 
 dotenv.config();
 
-const PORT = process.env.SERVER_PORT;
 const app = express();
 
 app.use(express.json());
@@ -33,7 +32,6 @@ app.use(session({
     maxAge: 1000 * 60 * 60 * 24,
     secure: true,
     sameSite: "none",
-    domain: ".pokehub-encyclopedia.site",
   },
   store: MongoStore.create({
     mongoUrl: process.env.DB_URL,
@@ -56,7 +54,4 @@ app.use("/", userRouter);
 app.use("/event", eventRouter);
 app.use("/board", postingRouter);
 
-// 서버 시작
-app.listen(PORT, () => {
-  console.log(`Server is running on ${PORT}`);
-});
+export default app;
