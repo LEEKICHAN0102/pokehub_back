@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    const gymLeaders = await GymLeader.find();
+    const gymLeaders = await GymLeader.find().limit(0);
     res.json(gymLeaders);
   } catch (error) {
     console.error("에러 발생:", error);
