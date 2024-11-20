@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    const champions = await mongoose.connection.collection("champion").find().fetch();
+    const champions = await mongoose.connection.collection("champion").find();
     res.json(champions);
   } catch (error) {
     console.error("에러 발생:", error);

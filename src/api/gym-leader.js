@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    const gymLeaders = await mongoose.connection.collection("gym-leader").find().limit(0).fetch();
+    const gymLeaders = await mongoose.connection.collection("gym-leader").find().limit(0);
     res.json(gymLeaders);
   } catch (error) {
     console.error("에러 발생:", error);
