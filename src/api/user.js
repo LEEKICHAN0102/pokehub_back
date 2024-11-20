@@ -1,31 +1,31 @@
 import express from "express";
 import bcrypt from "bcrypt";
-import { User } from "../schema/schema.js";
+import { User } from "./schema.js";
 import mongoose from "mongoose";
 
 const router = express.Router();
 
 router.get("/", async (req,res) => {
   const apiRequestFormat = {
-    "BASE_URL": "https://pokehub-encyclopedia.site",
+    "BASE_URL": "https://pokehub-back.vercel.app",
     "1. 인물 정보": {
-        "1.1 포켓몬 관장 정보(All)": `{BASE_URL}/gym-leader`,
-        "1.2 포켓몬 관장 정보(Detail)": `{BASE_URL}/gym-leader/detail/{gymLeader.order}`,
-        "1.3 포켓몬 사천왕 정보(All)": `{BASE_URL}/elite-four`,
-        "1.4 포켓몬 사천왕 정보(Detail)": `{BASE_URL}/elite-four/detail/{eliteFour.order}`,
-        "1.5 포켓몬 챔피언 정보(All)": `{BASE_URL}/champion`,
-        "1.6 포켓몬 챔피언 정보(Detail)": `{BASE_URL}/champion/detail/{champion.order}`
+        "1.1 포켓몬 관장 정보(All)": `https://pokehub-back.vercel.app/gym-leader`,
+        "1.2 포켓몬 관장 정보(Detail)": `https://pokehub-back.vercel.app/gym-leader/detail/{gymLeader.order}`,
+        "1.3 포켓몬 사천왕 정보(All)": `https://pokehub-back.vercel.app/elite-four`,
+        "1.4 포켓몬 사천왕 정보(Detail)": `https://pokehub-back.vercel.app/elite-four/detail/{eliteFour.order}`,
+        "1.5 포켓몬 챔피언 정보(All)": `https://pokehub-back.vercel.app/champion`,
+        "1.6 포켓몬 챔피언 정보(Detail)": `https://pokehub-back.vercel.app/champion/detail/{champion.order}`
     },
     "2. 이벤트": {
         "2.1 이벤트 카드(All)": "Link to https://pokemonkorea.co.kr/news",
-        "2.2": `{BASE_URL}/event`
+        "2.2": `https://pokehub-back.vercel.app/event`
     },
     "3. 게시판": {
-        "3.1 게시글(페이지)": `{BASE_URL}/board/{paginationNumber}`,
-        "3.2": `{BASE_URL}/board/detail/(posting._id)`
+        "3.1 게시글(페이지)": `https://pokehub-back.vercel.app/board/{paginationNumber}`,
+        "3.2": `https://pokehub-back.vercel.app/board/detail/(posting._id)`
     },
     "4. 프로필": {
-        "4.1 프로필": `{BASE_URL}/profile/{userId}`
+        "4.1 프로필": `https://pokehub-back.vercel.app/profile/{userId}`
     }
   };
   // send JSON  API Architecture 
