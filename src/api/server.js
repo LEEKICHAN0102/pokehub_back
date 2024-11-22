@@ -41,7 +41,10 @@ app.use(session({
 // MongoDB 연결 설정
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.DB_URL);
+    await mongoose.connect(process.env.DB_URL, {
+      bufferCommands: false,
+      autoIndex: false,
+    });
     console.log("DB 연결 성공");
   } catch (error) {
     console.error("DB 연결 에러:", error);
