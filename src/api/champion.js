@@ -1,11 +1,11 @@
 import express from "express";
-import { Champion } from "./schema.js";
+import mongoose from "mongoose";
 
 const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    const champions = await Champion.find();
+    const champions = await mongoose.connection.collection("champion").find().toArray();
     res.json(champions);
   } catch (error) {
     console.error("에러 발생:", error);
@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
 router.get("/detail/:order", async (req, res) => {
   try {
     const { order } = req.params;
-    const findByChampionOrder = await Champion.findOne({ order: Number(order) });
+    const findByChampionOrder = await mongoose.connection.collection("champion").findOne({ order: Number(order) });
     res.json(findByChampionOrder);
   } catch (error) {
     console.error("에러 발생:", error);

@@ -1,11 +1,11 @@
 import express from "express";
-import { EliteFour } from "./schema.js";
+import mongoose from "mongoose";
 
 const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    const eliteFour = await EliteFour.find();
+    const eliteFour = await mongoose.connection.collection("elite-four").find().toArray();
 
     // 원하는 문서의 _id
     const documentId = "65a60183b3a30685a7670ef2";
@@ -37,7 +37,7 @@ router.get("/", async (req, res) => {
 router.get("/detail/:order", async (req, res) => {
   try {
     const { order } = req.params;
-    const findByEliteName = await EliteFour.findOne({ order: Number(order) });
+    const findByEliteName = await mongoose.connection.collection("elite-four").findOne({ order: Number(order) });
     res.json(findByEliteName);
   } catch (error) {
     console.error("에러 발생:", error);
