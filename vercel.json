@@ -7,11 +7,9 @@
     }
   ],
   "routes": [
-    { "src": "/gym-leader/(.*)", "dest": "src/api/gym-leader.js" },
-    { "src": "/elite-four/(.*)", "dest": "src/api/elite-four.js" },
-    { "src": "/champion/(.*)", "dest": "src/api/champion.js" },
-    { "src": "/posting/(.*)", "dest": "src/api/posting.js" },
-    { "src": "/user/(.*)", "dest": "src/api/user.js" },
-    { "src": "/event", "dest": "src/api/event.js" }
+    {
+      "src": "/(.*)",
+      "dest": "src/api/server.js"
+    }
   ]
 }
