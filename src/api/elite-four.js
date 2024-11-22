@@ -37,7 +37,7 @@ router.get("/", async (req, res) => {
 router.get("/detail/:order", async (req, res) => {
   try {
     const { order } = req.params;
-    const findByEliteName = await mongoose.connection.collection("elite-four").findOne({ order: Number(order) });
+    const findByEliteName = await EliteFour.findOne({ order: Number(order) });
     res.json(findByEliteName);
   } catch (error) {
     console.error("에러 발생:", error);

@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
 router.get("/detail/:order", async (req, res) => {
   try {
     const { order } = req.params;
-    const findByChampionOrder = await mongoose.connection.collection("champion").findOne({ order: Number(order) });
+    const findByChampionOrder = await Champion.findOne({ order: Number(order) });
     res.json(findByChampionOrder);
   } catch (error) {
     console.error("에러 발생:", error);
