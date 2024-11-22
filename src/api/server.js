@@ -39,13 +39,21 @@ app.use(session({
 }));
 
 // MongoDB 연결 설정
-mongoose.connect(process.env.DB_URL);
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.DB_URL);
+    console.log("DB 연결 성공");
+  } catch (error) {
+    console.error("DB 연결 에러:", error);
+    process.exit(1); // 연결 실패 시 프로세스 종료
+  }
+};
 
+// MongoDB 연결 상태 디버깅
 const db = mongoose.connection;
-db.on("error", console.error.bind(console, "DB 에러"));
-db.once("open", function () {
-  console.log("DB 연결 성공");
-});
+db.on("connected", () => console.log("Mongoose 연결 성공"));
+db.on("error", (err) => console.error("Mongoose 연결 에러:", err));
+db.on("disconnected", () => console.log("Mongoose 연결 해제"));
 
 app.use("/gym-leader", gymLeaderRouter);
 app.use("/elite-four", eliteFourRouter);
@@ -53,5 +61,8 @@ app.use("/champion", championRouter);
 app.use("/", userRouter);
 app.use("/event", eventRouter);
 app.use("/board", postingRouter);
+
+// DB 연결 실행
+connectDB();
 
 export default app;
