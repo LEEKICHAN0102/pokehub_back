@@ -1,6 +1,12 @@
 {
   "version": 2,
   "routes": [
-    { "src": "/(.*)", "dest": "src/server.js" }
+    { "src": "/gym-leader/(.*)", "dest": "src/gym-leader.js" },
+    { "src": "/elite-four/(.*)", "dest": "src/elite-four.js" },
+    { "src": "/champion/(.*)", "dest": "src/champion.js" },
+    { "src": "/event/(.*)", "dest": "src/event.js" },
+    { "src": "/board/(.*)", "dest": "src/board.js" },
+    { "src": "/user/(.*)", "dest": "src/user.js" },
+    { "src": "/", "dest": "src/server.js" }
   ]
 }
