@@ -7,7 +7,7 @@ import MongoStore from "connect-mongo";
 import gymLeaderRouter from "./gym-leader.js";
 import eliteFourRouter from "./elite-four.js";
 import championRouter from "./champion.js";
-import userRouter from "./user.js";
+import userRouter from "./api/user.js";
 import eventRouter from "./event.js";
 import postingRouter from "./posting.js";
 
@@ -46,11 +46,11 @@ db.once("open", function () {
   console.log("DB 연결 성공");
 });
 
-app.use("/api/gym-leader", gymLeaderRouter);
-app.use("/api/elite-four", eliteFourRouter);
-app.use("/api/champion", championRouter);
-app.use("/api", userRouter);
-app.use("/api/event", eventRouter);
-app.use("/api/board", postingRouter);
+app.use("/gym-leader", gymLeaderRouter);
+app.use("/elite-four", eliteFourRouter);
+app.use("/champion", championRouter);
+app.use("/", userRouter);
+app.use("/event", eventRouter);
+app.use("/board", postingRouter);
 
 export default app;
