@@ -53,7 +53,4 @@ app.use("/champion", championRouter);
 app.use("/event", eventRouter);
 app.use("/board", postingRouter);
 
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log("실행 중");
-});
+export default app;
