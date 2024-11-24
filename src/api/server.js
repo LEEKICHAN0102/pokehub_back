@@ -27,11 +27,10 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  proxy: true,
   cookie: {
     maxAge: 1000 * 60 * 60 * 24,
-    secure: true,
-    sameSite: "none",
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   },
   store: MongoStore.create({
     mongoUrl: process.env.DB_URL,
