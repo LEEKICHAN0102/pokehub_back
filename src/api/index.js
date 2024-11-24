@@ -4,12 +4,12 @@ import dotenv from "dotenv";
 import cors from "cors";
 import session from "express-session";
 import MongoStore from "connect-mongo";
-import gymLeaderRouter from "./gym-leader.js";
-import eliteFourRouter from "./elite-four.js";
-import championRouter from "./champion.js";
-import userRouter from "./user.js";
-import eventRouter from "./event.js";
-import postingRouter from "./posting.js";
+import gymLeaderRouter from "../gym-leader.js";
+import eliteFourRouter from "../elite-four.js";
+import championRouter from "../champion.js";
+import userRouter from "../user.js";
+import eventRouter from "../event.js";
+import postingRouter from "../posting.js";
 
 dotenv.config();
 
