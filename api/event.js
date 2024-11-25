@@ -21,7 +21,7 @@ router.get("/", async (req, res) => {
     const page = await browser.newPage();
     await page.goto("https://pokemonkorea.co.kr/news", { waitUntil: "domcontentloaded" });
 
-    await page.waitForSelector("#newslist li", { timeout: 10000 });
+    await page.waitForSelector("#newslist li");
 
     const eventData = [];
     const eventList = await page.$$("#newslist li");
