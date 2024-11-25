@@ -15,15 +15,18 @@ router.get("/", async (req, res) => {
         '--disable-setuid-sandbox',
         '--disable-gpu',
         '--disable-software-rasterizer',
-      ], // 용량이 좀 많아서 실패하는 거 같음.. Options 변경
+        '--headless',
+        '--single-process',
+        '--disable-dev-shm-usage',
+      ],
       defaultViewport: chromium.defaultViewport,
     });
 
     const page = await browser.newPage();
+    
     await page.goto("https://pokemonkorea.co.kr/news", { waitUntil: "domcontentloaded" });
 
-    await page.waitForSelector("#newslist li");
-    await page.waitForTimeout(2000);
+    await page.waitForSelector("#newslist li", { timeout: 10000 });
 
     const eventData = [];
     const eventList = await page.$$("#newslist li");
