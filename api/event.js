@@ -9,7 +9,13 @@ router.get("/", async (req, res) => {
     const browser = await puppeteer.launch({
       headless: true,
       executablePath: await chromium.executablePath,
-      args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox'],
+      args: [
+        ...chromium.args,
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-gpu',
+        '--disable-software-rasterizer',
+      ], // 용량이 좀 많아서 실패하는 거 같음.. Options 변경
       defaultViewport: chromium.defaultViewport,
     });
 
