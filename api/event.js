@@ -4,26 +4,20 @@ import chromium from "chrome-aws-lambda";
 
 const router = express.Router();
 
-router.get("/event", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    const executablePath = await chromium.executablePath;
-
     const browser = await puppeteer.launch({
       headless: true,
-      executablePath: executablePath,
-      args: [
-        ...chromium.args,
-        '--disable-dev-shm-usage', // 공유 메모리 사용 비활성화
-      ],
+      executablePath: await chromium.executablePath,
+      args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox'],
       defaultViewport: chromium.defaultViewport,
     });
 
     const page = await browser.newPage();
     await page.goto("https://pokemonkorea.co.kr/news", { waitUntil: "domcontentloaded" });
 
-    // 요소가 로드될 때까지 대기
-    await page.waitForSelector("#newslist li", { timeout: 10000 });
-    await page.waitForTimeout(2000); // 추가 대기 시간
+    await page.waitForSelector("#newslist li");
+    await page.waitForTimeout(2000);
 
     const eventData = [];
     const eventList = await page.$$("#newslist li");
@@ -48,7 +42,7 @@ router.get("/event", async (req, res) => {
     res.status(200).json(eventData);
   } catch (error) {
     console.error("웹 스크래핑 에러:", error);
-    res.status(500).json({ error: error.message });
+    res.status(404).json({ error: error.message });
   }
 });
 
