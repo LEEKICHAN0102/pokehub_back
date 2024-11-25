@@ -5,8 +5,9 @@ import chromium from "@sparticuz/chromium";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
+  let browser;
   try {
-    const browser = await puppeteer.launch({
+    browser = await puppeteer.launch({
       headless: chromium.headless,
       executablePath: await chromium.executablePath(),
       args: [
@@ -19,7 +20,8 @@ router.get("/", async (req, res) => {
     });
 
     const page = await browser.newPage();
-    await page.goto("https://pokemonkorea.co.kr/news", { waitUntil: "domcontentloaded" });
+    
+    await page.goto("https://pokemonkorea.co.kr/news", { waitUntil: "domcontentloaded", timeout: 60000 });
 
     await page.waitForSelector("#newslist li");
 
@@ -50,11 +52,14 @@ router.get("/", async (req, res) => {
       }
     }
 
-    await browser.close();
     res.status(200).json(eventData);
   } catch (error) {
     console.error("웹 스크래핑 에러:", error);
-    res.status(404).json({ error: error.message });
+    res.status(500).json({ error: error.message });
+  } finally {
+    if (browser) {
+      await browser.close();
+    }
   }
 });
 
