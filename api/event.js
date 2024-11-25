@@ -8,7 +8,7 @@ router.get("/", async (req, res) => {
   try {
     const browser = await puppeteer.launch({
       headless: chromium.headless,
-      executablePath: await chromium.executablePath,
+      executablePath: await chromium.executablePath(),
       args: [
         ...chromium.args,
         "--no-sandbox",
