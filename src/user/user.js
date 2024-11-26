@@ -1,6 +1,6 @@
 import express from "express";
 import bcrypt from "bcrypt";
-import { User } from "./schema.js";
+import { User } from "../schema/schema.js";
 import mongoose from "mongoose";
 
 const router = express.Router();
