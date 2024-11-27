@@ -6,7 +6,7 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   try {
     const browser = await puppeteer.launch({ 
-      headless: "new",
+      headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
 
@@ -15,7 +15,6 @@ router.get("/", async (req, res) => {
     await page.goto("https://pokemonkorea.co.kr/news", { waitUntil: "domcontentloaded" });
 
     await page.waitForSelector("#newslist li");
-    await page.waitForTimeout(2000);
 
     const eventData = [];
     const eventList = await page.$$("#newslist li");
