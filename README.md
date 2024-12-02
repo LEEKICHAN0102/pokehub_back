@@ -4,7 +4,6 @@
 
 ## 목차
   - [개요](#개요)
-  - [프로젝트 설치](#프로젝트-설치)
   - [프로젝트 설명](#프로젝트-설명)
   - [프로젝트 구조](#프로젝트-구조)
   - [API](#API)
@@ -19,28 +18,6 @@
 - 개발 멤버 : 이기찬
 
 <br>
-
-## 프로젝트 설치
-
-- AWS 프리티어 기간의 종료로 요금 부담이 커지면서 부득이 하게 배포환경을 중단하게 되었습니다. 로컬에서 작동하기 위한 프로젝트 설치는 다음과 같습니다.
-
-1. Clone the Repository
-
-> git clone https://github.com/LEEKICHAN0102/pokehub_back.git
-
-2. Install Dependencies
-
-> npm install
-
-3. Start the development Server(Environmental variable decryption is required)
-
-> sh decryptEnv.sh
-
-4. Open the Project in your browser
-
-> http://localhost:8080
-
-- 더 많은 컨텐츠 이용을 위해 [PokéHub | FE](https://github.com/LEEKICHAN0102/pokehub_front) 설치
 
 <br>
 
@@ -75,24 +52,25 @@ pokehub_be/
 └── README.md
 ```
 
+<br>
+
 ## API
 ```
-BEFORE_BASE_URL = https://pokehub-encyclopedia.site
-BASE_URL = http://localhost:8080/
+BASE_URL = https://pokehub-encyclopedia.site
 
 1. 인물 정보
   > 1.1 포켓몬 관장 정보(All)
       | {BASE_URL}/gym-leader
   > 1.2 포켓몬 관장 정보(Detail)
-      | {BASE_URL}/gym-leader/detail/{gymLeader.order}
+      | {BASE_URL}/gym-leader/detail/{gymLeader.order} (Number)
   > 1.3 포켓몬 사천왕 정보(All)
       | {BASE_URL}/elite-four
   > 1.4 포켓몬 사천왕 정보(Detail)
-      | {BASE_URL}/elite-four/detail/{eliteFour.order}
+      | {BASE_URL}/elite-four/detail/{eliteFour.order} (Number)
   > 1.5 포켓몬 챔피언 정보(All)
       | {BASE_URL}/champion
   > 1.6 포켓몬 사천왕 정보(Detail)
-      | {BASE_URL}/champion/detail/{champion.order}
+      | {BASE_URL}/champion/detail/{champion.order} (Number)
 
 2. 이벤트
   > 2.1 이벤트 카드(All) Link to https://pokemonkorea.co.kr/news 
@@ -100,17 +78,17 @@ BASE_URL = http://localhost:8080/
 
 3. 게시판
   > 3.1 게시글(페이지)
-      | {BASE_URL}/board/{paginationNumber}
+      | {BASE_URL}/board/{paginationNumber} (Number)
   > 3.2
-      | {BASE_URL}/board/detail/(posting._id)
+      | {BASE_URL}/board/detail/(posting._id) (String)
 
 4. 프로필
   > 4.1 프로필
-      | {BASE_URL}/profile/{userId}
+      | {BASE_URL}/profile/{userId} (String)
 
 ```
 
-<br/>
+<br>
 
 ## 개발 환경
 
